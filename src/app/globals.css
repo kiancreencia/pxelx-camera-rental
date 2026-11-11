@@ -1,0 +1,185 @@
+@import "tailwindcss";
+
+:root {
+  --paper: #eceff4;
+  --surface: #ffffff;
+  --ink: #10131a;
+  --ink-soft: #2a3140;
+  --muted: #566070;
+  --line: #d3d9e2;
+  --focus: #d6126f; /* the one accent: the autofocus box */
+  --focus-soft: #fbe3ee;
+  --ok: #0b7285;
+  --ok-soft: #dcf1f4;
+  --warn: #8a5a00;
+  --warn-soft: #fcefd0;
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-surface: var(--surface);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-focus: var(--focus);
+  --color-focus-soft: var(--focus-soft);
+  --color-ok: var(--ok);
+  --color-ok-soft: var(--ok-soft);
+  --color-warn: var(--warn);
+  --color-warn-soft: var(--warn-soft);
+  --font-display: "Bricolage Grotesque Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Instrument Sans Variable", ui-sans-serif, system-ui, sans-serif;
+}
+
+html {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  scroll-behavior: smooth;
+}
+
+body {
+  line-height: 1.55;
+  text-rendering: optimizeLegibility;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
+  line-height: 1.08;
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ---- Viewfinder frame: corner brackets around the hero booking form ---- */
+.viewfinder {
+  position: relative;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+}
+.viewfinder::before,
+.viewfinder::after,
+.viewfinder > .vf-corner-b::before,
+.viewfinder > .vf-corner-b::after {
+  content: "";
+  position: absolute;
+  width: 28px;
+  height: 28px;
+  border: 0 solid var(--ink);
+  pointer-events: none;
+}
+.viewfinder::before {
+  top: -7px;
+  left: -7px;
+  border-top-width: 3px;
+  border-left-width: 3px;
+}
+.viewfinder::after {
+  top: -7px;
+  right: -7px;
+  border-top-width: 3px;
+  border-right-width: 3px;
+}
+.viewfinder > .vf-corner-b::before {
+  bottom: -7px;
+  left: -7px;
+  border-bottom-width: 3px;
+  border-left-width: 3px;
+}
+.viewfinder > .vf-corner-b::after {
+  bottom: -7px;
+  right: -7px;
+  border-bottom-width: 3px;
+  border-right-width: 3px;
+}
+
+/* The autofocus box blinks once when the page loads, then stays put. */
+@keyframes focus-lock {
+  0% {
+    transform: scale(1.6);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(0.92);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+.focus-box {
+  animation: focus-lock 700ms cubic-bezier(0.2, 0.8, 0.2, 1) 250ms both;
+}
+
+/* ---- Form controls ---- */
+.field {
+  width: 100%;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 0.6rem 0.75rem;
+  color: var(--ink);
+  min-height: 2.75rem;
+}
+.field:focus-visible {
+  outline-offset: 0;
+  border-color: var(--focus);
+}
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 2.75rem;
+  padding: 0.6rem 1.25rem;
+  border-radius: 4px;
+  font-weight: 600;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: background-color 120ms, color 120ms, border-color 120ms;
+}
+.btn-primary {
+  background: var(--ink);
+  color: #fff;
+}
+.btn-primary:hover:not(:disabled) {
+  background: var(--focus);
+}
+.btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.btn-quiet {
+  background: transparent;
+  color: var(--ink);
+  border-color: var(--ink);
+}
+.btn-quiet:hover {
+  background: var(--ink);
+  color: #fff;
+}
