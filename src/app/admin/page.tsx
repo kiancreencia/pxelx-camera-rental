@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
-import { signOut, updateStatus } from "./actions";
+import { updateStatus } from "./actions";
 import { formatDate, formatPHP, formatRange } from "@/lib/pricing";
 import { allStatuses, statusLabel, statusTone } from "@/lib/status";
 import { isDemoMode } from "@/lib/supabase/public";
@@ -54,12 +54,7 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <h1 className="text-4xl font-bold">Bookings</h1>
-        <form action={signOut}>
-          <button type="submit" className="btn btn-quiet">Sign out</button>
-        </form>
-      </div>
+      <h1 className="text-4xl font-bold">Bookings</h1>
 
       <nav aria-label="Filter by status" className="mt-6 flex flex-wrap gap-2">
         {[{ value: undefined, label: "All" }, ...allStatuses.map((s) => ({ value: s, label: statusLabel[s] }))].map((f) => (

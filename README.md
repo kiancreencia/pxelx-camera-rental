@@ -42,10 +42,17 @@ when the duration pricing changes.
 ### Create your staff login
 
 1. In Supabase: Authentication > Users > Add user (email and password).
-2. Copy that user's id, then run in the SQL editor:
+2. Copy that user's id, then run this whole batch in the Supabase SQL editor. `reset role` restores
+   the session role if the editor is currently executing as `anon` or `authenticated`. Do not run
+   this through the app's Supabase client: row-level security intentionally prevents users from
+   granting themselves admin access.
 
    ```sql
-   insert into public.profiles (id, is_admin) values ('PASTE-USER-ID', true);
+   reset role;
+
+   insert into public.profiles (id, is_admin)
+   values ('PASTE-USER-ID', true)
+   on conflict (id) do update set is_admin = true;
    ```
 
 3. Sign in at `/admin` (there's a "Staff sign in" link in the footer).
