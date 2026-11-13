@@ -1,43 +1,67 @@
--- Sample catalog. Replace names, rates and quantities with your real inventory.
+-- Sample catalog. Replace rates, deposits, and quantities with your real inventory.
 
 insert into public.categories (slug, name, sort_order) values
   ('compact', 'Compact cameras', 1),
   ('mirrorless', 'Mirrorless', 2),
-  ('action', 'Action and gimbal', 3),
-  ('lenses', 'Lenses', 4)
-on conflict (slug) do nothing;
+  ('action', 'Action cameras', 3),
+  ('audio', 'Audio', 4),
+  ('accessories', 'Accessories', 5)
+on conflict (slug) do update
+set name = excluded.name, sort_order = excluded.sort_order;
 
-insert into public.cameras (category_id, slug, name, brand, tagline, description, daily_rate, deposit, quantity, includes)
-select c.id, v.slug, v.name, v.brand, v.tagline, v.description, v.daily_rate, v.deposit, v.quantity, v.includes
+insert into public.cameras (
+  category_id, slug, name, brand, tagline, description, daily_rate, deposit, quantity, includes, image_url
+)
+select
+  c.id, v.slug, v.name, v.brand, v.tagline, v.description, v.daily_rate, v.deposit, v.quantity, v.includes, v.image_url
 from (values
-  ('compact', 'canon-g7x-mark-iii', 'Canon G7 X Mark III', 'Canon',
-   'Pocketable vlogging camera with a flip-up screen.',
-   'A compact camera with a fast f/1.8-2.8 lens, a screen that flips up for self-shots, and live streaming over USB. Easy to carry on trips and simple enough for a first vlog.',
-   500, 5000, 2, array['Battery x2', '64GB SD card', 'Charger', 'Wrist strap', 'Carry pouch']),
-  ('compact', 'sony-zv-1', 'Sony ZV-1', 'Sony',
-   'Vlog-first compact with strong autofocus.',
-   'One-inch sensor, a built-in ND filter, and a directional mic with a wind screen. Good for talking-head videos and travel clips.',
-   550, 6000, 1, array['Battery x2', '64GB SD card', 'Charger', 'Wind screen', 'Carry pouch']),
-  ('mirrorless', 'canon-eos-r50', 'Canon EOS R50', 'Canon',
-   'Light APS-C mirrorless with 4K video.',
-   'Subject-tracking autofocus, 4K video, and RF-mount lenses. Comes with the 18-45mm kit lens.',
-   750, 8000, 2, array['18-45mm kit lens', 'Battery x2', '64GB SD card', 'Charger', 'Camera strap']),
-  ('mirrorless', 'fujifilm-x-t30-ii', 'Fujifilm X-T30 II', 'Fujifilm',
-   'Film-style color straight out of the camera.',
-   'A small APS-C body with Fujifilm color profiles, so photos look finished without editing. Comes with the 15-45mm kit lens.',
-   850, 10000, 1, array['15-45mm kit lens', 'Battery x2', '64GB SD card', 'Charger', 'Camera strap']),
+  ('compact', 'canon-s95', 'Canon PowerShot S95', 'Canon',
+   'A classic compact camera for everyday photos and travel.',
+   'A pocket-sized Canon PowerShot compact camera for bringing along on everyday outings and trips.',
+   500, 1000, 1, array[]::text[], '/images/cameras/Canon%20Powershot%20S95.png'),
+  ('compact', 'canon-sx740-hs', 'Canon SX740 HS', 'Canon',
+   'A travel-friendly compact camera with a versatile zoom.',
+   'A compact PowerShot camera suited to travel, day trips, and capturing subjects near or far.',
+   550, 1000, 1, array[]::text[], '/images/cameras/Canon%20sx740%20hs.png'),
+  ('mirrorless', 'sony-a6400', 'Sony a6400', 'Sony',
+   'An APS-C mirrorless camera for photos and video.',
+   'A compact interchangeable-lens mirrorless camera for travel, portraits, and video.',
+   750, 1000, 1, array[]::text[], '/images/cameras/Sony%20a6400.png'),
+  ('audio', 'dji-mic-mini-2', 'DJI Mic Mini 2', 'DJI',
+   'A compact wireless microphone system for clearer audio.',
+   'A wireless microphone system for recording speech and audio with compatible cameras and devices.',
+   300, 1000, 1, array[]::text[], '/images/cameras/DJI%20Mic%20Mini%202.png'),
+  ('action', 'dji-osmo-nano', 'DJI Osmo Nano', 'DJI',
+   'A compact action camera for hands-free moments.',
+   'A small action camera for capturing everyday adventures and point-of-view footage.',
+   450, 1000, 1, array[]::text[], '/images/cameras/DJI%20Osmo%20Nano.png'),
   ('action', 'dji-osmo-pocket-3', 'DJI Osmo Pocket 3', 'DJI',
-   'Pocket gimbal camera for smooth handheld video.',
-   'A three-axis gimbal with a one-inch sensor and a rotating touchscreen. Walk, run, or ride and the footage stays steady.',
-   400, 5000, 3, array['Battery', '64GB microSD card', 'Charging cable', 'Wrist strap', 'Carry bag']),
-  ('action', 'gopro-hero-13-black', 'GoPro HERO13 Black', 'GoPro',
-   'Waterproof action camera for trips and sports.',
-   'Waterproof to 10 m without a case, with 5.3K video and HyperSmooth stabilization. Includes a few mounts for helmets and handlebars.',
-   450, 5000, 3, array['Enduro battery x2', '64GB microSD card', 'Charging cable', 'Mounting kit']),
-  ('lenses', 'sigma-30mm-f1-4-rf', 'Sigma 30mm f/1.4 (RF mount)', 'Sigma',
-   'Fast prime for portraits and low light.',
-   'A bright 30mm lens with a soft blurred background. Fits Canon RF-mount APS-C bodies such as the EOS R50.',
-   300, 6000, 1, array['Front and rear caps', 'Lens hood', 'Pouch'])
-) as v(category_slug, slug, name, brand, tagline, description, daily_rate, deposit, quantity, includes)
+   'A pocket-sized camera with stabilized video.',
+   'A compact gimbal camera for smooth handheld footage while traveling or filming on the move.',
+   400, 1000, 1, array[]::text[], '/images/cameras/DJI%20Osmo%20Pocket%203.png'),
+  ('action', 'insta360-ace-pro-2', 'Insta360 Ace Pro 2', 'Insta360',
+   'An action camera for adventures and creative video.',
+   'A rugged action camera for capturing trips, activities, and point-of-view footage.',
+   450, 1000, 1, array[]::text[], '/images/cameras/Insta360%20Ace%20Pro%202.png'),
+  ('accessories', 'insta360-pocket-printer', 'Insta360 Pocket Printer', 'Insta360',
+   'A portable printer for turning photos into physical prints.',
+   'A compact photo printer for creating physical prints from compatible devices.',
+   300, 1000, 1, array[]::text[], '/images/cameras/Insta360%20Pocket%20Printer.png'),
+  ('action', 'insta360-x5', 'Insta360 X5', 'Insta360',
+   'A 360 camera for immersive footage and flexible framing.',
+   'A 360 camera for capturing everything around you and choosing the framing later.',
+   450, 1000, 1, array[]::text[], '/images/cameras/Insta360%20X5.png')
+) as v(category_slug, slug, name, brand, tagline, description, daily_rate, deposit, quantity, includes, image_url)
 join public.categories c on c.slug = v.category_slug
-on conflict (slug) do nothing;
+on conflict (slug) do update set
+  category_id = excluded.category_id,
+  name = excluded.name,
+  brand = excluded.brand,
+  tagline = excluded.tagline,
+  description = excluded.description,
+  daily_rate = excluded.daily_rate,
+  deposit = excluded.deposit,
+  quantity = excluded.quantity,
+  includes = excluded.includes,
+  image_url = excluded.image_url,
+  is_active = true;

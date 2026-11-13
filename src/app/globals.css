@@ -15,21 +15,36 @@
   --warn-soft: #fcefd0;
 }
 
-@theme inline {
-  --color-paper: var(--paper);
-  --color-surface: var(--surface);
-  --color-ink: var(--ink);
-  --color-ink-soft: var(--ink-soft);
-  --color-muted: var(--muted);
-  --color-line: var(--line);
-  --color-focus: var(--focus);
-  --color-focus-soft: var(--focus-soft);
-  --color-ok: var(--ok);
-  --color-ok-soft: var(--ok-soft);
-  --color-warn: var(--warn);
-  --color-warn-soft: var(--warn-soft);
-  --font-display: "Bricolage Grotesque Variable", ui-sans-serif, system-ui, sans-serif;
-  --font-sans: "Instrument Sans Variable", ui-sans-serif, system-ui, sans-serif;
+@layer utilities {
+  .bg-paper { background-color: var(--paper); }
+  .bg-surface { background-color: var(--surface); }
+  .bg-ink { background-color: var(--ink); }
+  .bg-focus { background-color: var(--focus); }
+  .bg-focus-soft { background-color: var(--focus-soft); }
+  .bg-ok { background-color: var(--ok); }
+  .bg-ok-soft { background-color: var(--ok-soft); }
+  .bg-warn { background-color: var(--warn); }
+  .bg-warn-soft { background-color: var(--warn-soft); }
+
+  .text-paper { color: var(--paper); }
+  .text-surface { color: var(--surface); }
+  .text-ink { color: var(--ink); }
+  .text-ink-soft { color: var(--ink-soft); }
+  .text-muted { color: var(--muted); }
+  .text-focus { color: var(--focus); }
+  .text-focus-soft { color: var(--focus-soft); }
+  .text-ok { color: var(--ok); }
+  .text-ok-soft { color: var(--ok-soft); }
+  .text-warn { color: var(--warn); }
+  .text-warn-soft { color: var(--warn-soft); }
+
+  .border-line { border-color: var(--line); }
+  .border-focus { border-color: var(--focus); }
+  .border-ok { border-color: var(--ok); }
+  .border-warn { border-color: var(--warn); }
+
+  .font-display { font-family: var(--font-display); }
+  .font-sans { font-family: var(--font-sans); }
 }
 
 html {
@@ -42,6 +57,13 @@ html {
 body {
   line-height: 1.55;
   text-rendering: optimizeLegibility;
+}
+
+.camera-catalog {
+  background-color: #efefef;
+  background-image:
+    radial-gradient(ellipse at 16% 4%, rgb(255 255 255 / 82%), transparent 38%),
+    radial-gradient(ellipse at 85% 22%, rgb(0 0 0 / 3%), transparent 42%);
 }
 
 h1,
@@ -183,3 +205,4 @@ p {
   background: var(--ink);
   color: #fff;
 }
+

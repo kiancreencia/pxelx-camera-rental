@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { site } from "@/lib/config";
 import { useCart } from "@/lib/cart-store";
-import { formatPHP, formatRange, rentalDays, todayManila } from "@/lib/pricing";
+import { formatPHP, formatRange, rentalDailyRate, rentalDays, rentalRateNote, todayManila } from "@/lib/pricing";
 import type { Camera } from "@/lib/types";
 import { RentalCalendar } from "./RentalCalendar";
 
@@ -27,7 +27,9 @@ export function BookingPanel({
   const [result, setResult] = useState<Result>(null);
 
   const days = start && end ? rentalDays(start, end) : 0;
-  const total = days * camera.dailyRate;
+  const dailyRate = days > 0 ? rentalDailyRate(camera.slug, camera.dailyRate, days) : camera.dailyRate;
+  const total = days * dailyRate;
+  const rateNote = rentalRateNote(camera.slug, days);
 
   function selectDate(date: string, step: "pickup" | "return") {
     if (step === "pickup") {
@@ -88,9 +90,10 @@ export function BookingPanel({
     <form onSubmit={addToCart} className="viewfinder p-6" noValidate>
       <div className="focus-box absolute right-5 top-5 size-6 border-2 border-focus" aria-hidden="true" />
       <p className="pr-10 font-display text-3xl font-bold tabular-nums">
-        {formatPHP(camera.dailyRate)}
+        {formatPHP(dailyRate)}
         <span className="text-base font-normal text-muted"> a day</span>
       </p>
+      {rateNote ? <p className="mt-1 text-sm text-muted">{rateNote}</p> : null}
 
       <RentalCalendar cameraId={camera.id} start={start} end={end} onSelect={selectDate} />
 

@@ -6,7 +6,7 @@ import { useState } from "react";
 import { placeBooking } from "@/app/cart/actions";
 import { useCart } from "@/lib/cart-store";
 import { site } from "@/lib/config";
-import { formatPHP, formatRange, rentalDays } from "@/lib/pricing";
+import { formatPHP, formatRange, rentalDailyRate, rentalDays, rentalRateNote } from "@/lib/pricing";
 import type { CustomerDetails } from "@/lib/types";
 
 const blank: CustomerDetails = { name: "", email: "", phone: "", fulfillment: "pickup", address: "", notes: "" };
@@ -22,7 +22,10 @@ export function CartView({ accountEmail, accountName }: { accountEmail: string; 
   const set = <K extends keyof CustomerDetails>(key: K, value: CustomerDetails[K]) =>
     setForm((f) => ({ ...f, [key]: value }));
 
-  const subtotal = cart.lines.reduce((sum, l) => sum + l.dailyRate * rentalDays(l.startDate, l.endDate), 0);
+  const subtotal = cart.lines.reduce((sum, l) => {
+    const days = rentalDays(l.startDate, l.endDate);
+    return sum + rentalDailyRate(l.slug, l.dailyRate, days) * days;
+  }, 0);
   const deposits = cart.lines.reduce((sum, l) => sum + l.deposit, 0);
 
   if (cart.lines.length === 0) {
@@ -63,6 +66,8 @@ export function CartView({ accountEmail, accountName }: { accountEmail: string; 
         <ul className="mt-4 divide-y divide-line rounded border border-line bg-surface">
           {cart.lines.map((line, i) => {
             const days = rentalDays(line.startDate, line.endDate);
+            const dailyRate = rentalDailyRate(line.slug, line.dailyRate, days);
+            const rateNote = rentalRateNote(line.slug, days);
             return (
               <li key={`${line.cameraId}-${line.startDate}-${line.endDate}`} className="flex items-start justify-between gap-4 p-4">
                 <div>
@@ -71,8 +76,9 @@ export function CartView({ accountEmail, accountName }: { accountEmail: string; 
                   </Link>
                   <p className="text-sm text-muted">
                     {formatRange(line.startDate, line.endDate)} ({days} {days === 1 ? "day" : "days"} at{" "}
-                    {formatPHP(line.dailyRate)})
+                    {formatPHP(dailyRate)})
                   </p>
+                  {rateNote ? <p className="text-sm text-muted">{rateNote}</p> : null}
                   <button
                     type="button"
                     onClick={() => cart.remove(i)}
@@ -81,7 +87,7 @@ export function CartView({ accountEmail, accountName }: { accountEmail: string; 
                     Remove {line.name}
                   </button>
                 </div>
-                <p className="font-semibold tabular-nums">{formatPHP(line.dailyRate * days)}</p>
+                <p className="font-semibold tabular-nums">{formatPHP(dailyRate * days)}</p>
               </li>
             );
           })}

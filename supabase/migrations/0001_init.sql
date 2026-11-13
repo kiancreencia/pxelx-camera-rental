@@ -1,8 +1,6 @@
 -- pxelx camera rental: schema, availability logic, and row level security.
 -- Run in the Supabase SQL editor (or `supabase db push`).
 
-create extension if not exists pgcrypto;
-
 -- ---------------------------------------------------------------- tables
 
 create table public.categories (
@@ -135,28 +133,33 @@ declare
   v_days int;
   v_line numeric(10, 2);
   v_fulfillment text := p_customer ->> 'fulfillment';
+  v_item_count int;
 begin
   if coalesce(trim(p_customer ->> 'name'), '') = ''
      or coalesce(trim(p_customer ->> 'email'), '') = ''
      or coalesce(trim(p_customer ->> 'phone'), '') = '' then
     raise exception 'Name, email and phone are required.';
   end if;
-  if v_fulfillment not in ('pickup', 'delivery') then
+  if v_fulfillment is null or v_fulfillment not in ('pickup', 'delivery') then
     raise exception 'Choose pickup or delivery.';
   end if;
   if v_fulfillment = 'delivery' and coalesce(trim(p_customer ->> 'address'), '') = '' then
     raise exception 'A delivery address is required for delivery.';
   end if;
-  if jsonb_typeof(p_items) <> 'array' or jsonb_array_length(p_items) = 0 then
+  if coalesce(jsonb_typeof(p_items), '') <> 'array' then
     raise exception 'Your cart is empty.';
   end if;
-  if jsonb_array_length(p_items) > 20 then
+  v_item_count := jsonb_array_length(p_items);
+  if v_item_count = 0 then
+    raise exception 'Your cart is empty.';
+  end if;
+  if v_item_count > 20 then
     raise exception 'Too many items in one booking.';
   end if;
 
   -- Unique, human-friendly reference like PX-7K2M9Q
   loop
-    v_reference := 'PX-' || substr(translate(upper(encode(gen_random_bytes(12), 'base64')), '+/=OIL01', 'XYZ'), 1, 6);
+    v_reference := 'PX-' || substr(upper(replace(gen_random_uuid()::text, '-', '')), 1, 6);
     exit when not exists (select 1 from public.bookings where reference = v_reference);
   end loop;
 

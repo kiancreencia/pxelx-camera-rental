@@ -8,7 +8,7 @@ export function CartLink() {
   return (
     <Link
       href="/cart"
-      className="inline-flex items-center gap-2 rounded px-3 py-2 font-medium hover:bg-ink hover:text-white"
+      className="inline-flex items-center gap-2 rounded-full px-3 py-2 font-medium hover:bg-black/5"
     >
       Cart
       <span

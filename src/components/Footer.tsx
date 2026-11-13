@@ -4,7 +4,7 @@ import { site } from "@/lib/config";
 
 export function Footer() {
   return (
-    <footer className="mt-20 bg-ink text-white">
+    <footer className="bg-ink text-white">
       <div className="mx-auto grid max-w-6xl gap-10 px-4 py-12 sm:px-6 md:grid-cols-[1.4fr_1fr_1fr]">
         <div className="space-y-3">
           <div className="flex items-center gap-2.5">

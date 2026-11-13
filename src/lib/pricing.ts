@@ -1,5 +1,32 @@
 const DAY_MS = 86_400_000;
 
+const durationPricingSlugs = new Set([
+  "sony-a6400",
+  "dji-osmo-nano",
+  "insta360-x5",
+  "dji-osmo-pocket-3",
+  "insta360-ace-pro-2",
+  "canon-s95",
+  "canon-sx740-hs",
+]);
+
+export function rentalDailyRate(slug: string, baseRate: number, days: number): number {
+  if (!durationPricingSlugs.has(slug)) return baseRate;
+  if (days === 1) return baseRate + 50;
+  if (days >= 5) return baseRate - (slug === "canon-s95" ? 20 : 50);
+  return baseRate;
+}
+
+export function rentalRateNote(slug: string, days: number): string | null {
+  if (!durationPricingSlugs.has(slug)) return null;
+  if (days === 1) return "Includes a ₱50 one-day surcharge.";
+  if (days >= 5) {
+    const discount = slug === "canon-s95" ? 20 : 50;
+    return `Includes ₱${discount} off per day for rentals of 5+ days.`;
+  }
+  return null;
+}
+
 /** Calendar days in the rental, counting both the first and last date. */
 export function rentalDays(start: string, end: string): number {
   const a = Date.parse(`${start}T00:00:00Z`);

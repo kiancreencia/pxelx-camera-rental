@@ -73,6 +73,7 @@ export async function getCameras(opts: {
     const { data, error } = await createPublicClient()
       .from("cameras")
       .select(CAMERA_COLUMNS)
+      .eq("is_active", true)
       .order("daily_rate", { ascending: true })
       .returns<CameraRow[]>();
     if (error) throw new Error(error.message);
@@ -93,6 +94,7 @@ export async function getCamera(slug: string): Promise<Camera | null> {
     .from("cameras")
     .select(CAMERA_COLUMNS)
     .eq("slug", slug)
+    .eq("is_active", true)
     .maybeSingle<CameraRow>();
   if (error) throw new Error(error.message);
   return data ? toCamera(data) : null;

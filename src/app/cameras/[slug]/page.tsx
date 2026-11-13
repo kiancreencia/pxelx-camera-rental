@@ -43,7 +43,7 @@ export default async function CameraPage({
           <div className="aspect-[4/3] overflow-hidden rounded border border-line bg-paper">
             {camera.imageUrl ? (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={camera.imageUrl} alt={camera.name} className="h-full w-full object-cover" />
+              <img src={camera.imageUrl} alt={camera.name} className="h-full w-full object-contain" />
             ) : (
               <CameraArt seed={camera.slug} />
             )}

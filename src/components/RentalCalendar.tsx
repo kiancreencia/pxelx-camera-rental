@@ -87,7 +87,13 @@ export function RentalCalendar({
       return;
     }
 
-    if (date <= start) {
+    if (date === start) {
+      setStep("return");
+      onSelect(date, "return");
+      return;
+    }
+
+    if (date < start) {
       setStep("return");
       onSelect(date, "pickup");
       return;
@@ -104,7 +110,7 @@ export function RentalCalendar({
           type="button"
           onClick={() => setStep("pickup")}
           aria-pressed={step === "pickup"}
-          className={`rounded border px-3 py-2 text-left text-sm ${
+          className={`rounded border px-3 py-2 text-left text-sm hover:cursor-pointer ${
             step === "pickup" ? "border-ok bg-ok-soft" : "border-line"
           }`}
         >
@@ -116,12 +122,12 @@ export function RentalCalendar({
           onClick={() => start && setStep("return")}
           aria-pressed={step === "return"}
           disabled={!start}
-          className={`rounded border px-3 py-2 text-left text-sm disabled:opacity-50 ${
+          className={`rounded border px-3 py-2 text-left text-sm hover:cursor-pointer disabled:opacity-50 ${
             step === "return" ? "border-ok bg-ok-soft" : "border-line"
           }`}
         >
           <span className="font-semibold">2. Return</span>
-          <span className="block text-muted">{end ? formatDate(end) : "Choose a later day"}</span>
+          <span className="block text-muted">{end ? formatDate(end) : "Choose return day"}</span>
         </button>
       </div>
 
@@ -176,7 +182,7 @@ export function RentalCalendar({
               aria-label={`${formatDate(date)}${isUnavailable ? ", unavailable" : available === undefined ? "" : ", available"}`}
               aria-pressed={selected}
               title={isUnavailable ? "Unavailable" : available === undefined ? "Checking availability" : `${available} available`}
-              className={`aspect-square rounded text-sm transition-colors ${
+              className={`aspect-square rounded text-sm transition-colors hover cursor-pointer ${
                 selected
                   ? "bg-ink font-semibold text-white"
                   : outsideRange

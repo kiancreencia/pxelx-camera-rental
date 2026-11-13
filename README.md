@@ -20,7 +20,8 @@ cameras so you can look around. Booking and staff sign-in are off until you conn
 1. Create a project at supabase.com.
 2. In the SQL editor, run `supabase/migrations/0001_init.sql`, then
    `supabase/migrations/0002_customer_auth.sql`, then
-   `supabase/migrations/0003_calendar_availability.sql`, then `supabase/seed.sql`
+   `supabase/migrations/0003_calendar_availability.sql`, then
+   `supabase/migrations/0005_duration_pricing.sql`, then `supabase/seed.sql`
    (sample cameras; replace them with your real inventory).
 3. Copy `.env.example` to `.env.local` and fill in the project URL and anon (publishable) key
    from Project settings > API.
@@ -28,6 +29,15 @@ cameras so you can look around. Booking and staff sign-in are off until you conn
 
 If Supabase was already set up before the calendar update, also run
 `supabase/migrations/0003_calendar_availability.sql` in the SQL editor.
+If it was already set up before this booking reference fix, run
+`supabase/migrations/0004_booking_reference.sql` in the SQL editor after `0002_customer_auth.sql`.
+Fresh installs can skip `0004_booking_reference.sql`; its corrected booking function is already in
+`0001_init.sql`.
+If you already applied an earlier version of `0004_booking_reference.sql`, run the updated file
+again to apply the input-validation fixes.
+Run `supabase/migrations/0005_duration_pricing.sql` on existing projects after the customer-auth
+migration to apply the selected cameras' duration-based rates. Rerun it to update existing projects
+when the duration pricing changes.
 
 ### Create your staff login
 
